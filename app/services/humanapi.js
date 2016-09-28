@@ -7,7 +7,7 @@ export default (Ember.Service || Ember.Object).extend({
       throw new Ember.Error('Human API: please pass in options');
     }
     let clientId = this.get('clientId');
-    let serverEndpot = this.get('serverEndpoint');
+    let serverEndpoint = this.get('serverEndpoint');
 
     return new Ember.RSVP.Promise(function(resolve, reject) {
       var options = {
@@ -16,10 +16,12 @@ export default (Ember.Service || Ember.Object).extend({
         publicToken: opts.publicToken || '',  // Leave blank for new users
 
         finish: function(err, sessionTokenObject) {
-          $.ajax({
+          Ember.$.ajax({
             type: "POST",
             url: serverEndpoint,
-            data: sessionTokenObject
+            data: JSON.stringify(sessionTokenObject),
+            contentType: 'application/json',
+            dataType: 'json'
           }).then(function(success) {
             console.log(success);
             resolve(success);
